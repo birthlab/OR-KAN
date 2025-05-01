@@ -57,6 +57,7 @@ OR-KAN is a tool for quality control (QC) of T2-weighted (T2w) fetal brain MR im
 #### Acknowledgments
 We gratefully acknowledge the contributions of the following projects:  
 1. https://github.com/IntelligentImaging/fetal-brain-extraction  
-2. https://github.com/IvanDrokin/torch-conv-kan  
-3. https://github.com/KindXiaoming/pykan  
-4. https://github.com/gift-surg/NiftyMIC
+2. https://github.com/IvanDrokin/torch-conv-kan
+3. https://github.com/Medical-Image-Analysis-Laboratory/fetmrqc
+4. https://github.com/KindXiaoming/pykan  
+5. https://github.com/gift-surg/NiftyMIC
