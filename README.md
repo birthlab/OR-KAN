@@ -40,11 +40,24 @@ OR-KAN is a tool for quality control (QC) of T2-weighted (T2w) fetal brain MR im
 
 + For brain extraction on your fetal brain images, it is recommended to use the [Fetal-BET](https://github.com/IntelligentImaging/fetal-brain-extraction) tool.
 
-+ Run the quality control model with the following command:  
++ Run the quality control model with the following command (with automatic orientation detection):
 
   ```bash
   python quality_control.py --input_dir YOUR_PATH/OR-KAN/data_example_with_mask
   ```
+
++ You can also **manually specify the MRI sequence and orientation** if known:
+
+  ```bash
+  python quality_control.py --input_dir YOUR_PATH/OR-KAN/data_example_with_mask \
+   --sequence TSE --ori coronal
+  ```
+
+  - `--sequence` supports `TSE` (default) and `BTFE`.
+  - `--ori` supports `axial`, `coronal`, `sagittal`. If not specified, the model will automatically determine the main orientation by majority voting across all slices.
+
++ The script will print, for each MRI, the inferred orientation (if auto), quality score, quality class, used threshold, and model sequence.
+
 
 + Run the quality control pipeline for reconstruction using the following command:  
 
