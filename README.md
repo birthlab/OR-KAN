@@ -1,4 +1,4 @@
-OR-KAN: **Unsupervised Fetal Brain MRI Quality Control based on Slice-level Orientation Prediction Uncertainty using an Orientation Recognition KAN Model**
+OR-KAN: **Quality-label-free Fetal Brain MRI Quality Control Based on Image Orientation Recognition Uncertainty**
 
 
 
