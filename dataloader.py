@@ -25,14 +25,11 @@ def crop_image(input_array,target_shape):
 def kill_background(model_array):
     nonzero_indices = np.nonzero(model_array)
 
-    # 找到前景部分的最小和最大索引值
     min_indices = np.min(nonzero_indices, axis=1)
     max_indices = np.max(nonzero_indices, axis=1)
     #print(max_indices)
-    # 计算最小边界框的切片范围
     slices = [slice(min_index, max_index + 1) for min_index, max_index in zip(min_indices, max_indices)]
 
-    # 根据切片范围裁剪出包含3D模型的最小numpy数组
     min_cropped_array = model_array[tuple(slices)]
 
     return min_cropped_array
@@ -108,7 +105,7 @@ def prepare_image_for_test(image_path):
 
     selected_slices = image[start_index:end_index+1, :, :]
 
-    images = []  # 存储五张图像
+    images = []  
     for i in range(selected_slices.shape[0]):
         slice = selected_slices[i:i+1, :, :]
         images.append(slice)
@@ -190,21 +187,16 @@ def extract_content_between_last_two_slashes(path):
     Returns:
     str: The content between the last two slashes, or an empty string if not enough slashes are present.
     """
-    # 找到最后一个 '/' 的位置
     last_slash_index = path.rfind('/')
     
-    # 如果没有找到 '/', 返回空字符串
     if last_slash_index == -1:
         return ""
     
-    # 找到倒数第二个 '/' 的位置
     second_last_slash_index = path.rfind('/', 0, last_slash_index)
     
-    # 如果没有找到第二个 '/', 返回空字符串
     if second_last_slash_index == -1:
         return ""
     
-    # 提取最后两个 '/' 之间的内容
     content_between_slashes = path[second_last_slash_index + 1:last_slash_index]
     
     return content_between_slashes
@@ -218,7 +210,7 @@ def change_and_save_fidon_atlas(input_path_list,output_path):
 
         array = prepare_single_image(image_path)
 
-        #array = zoom(array, [(20/array.shape[0]),1,1], order=3)  # order=1 表示使用线性插值
+        #array = zoom(array, [(20/array.shape[0]),1,1], order=3)  
 
         #print(array.shape)
         good = extract_content_between_last_two_slashes(good)
@@ -240,14 +232,12 @@ def extract_after_last_slash(input_string):
     Returns:
     str: The substring after the last slash, or an empty string if no slash is present.
     """
-    # 查找最后一个 '/' 的位置
+
     last_slash_index = input_string.rfind('/')
     
-    # 如果找到了 '/', 提取其后的内容
     if last_slash_index != -1:
         return input_string[last_slash_index + 1:]
     else:
-        # 如果没有 '/', 返回空字符串
         return ""
 def change_and_save_gholipour_atlas(input_path_list,output_path):
     good_list = input_path_list
@@ -321,7 +311,6 @@ class MRIDataset(Dataset):
                 random_slice_index = np.random.randint(start_index, end_index)
                 selected_slice = image[random_slice_index:random_slice_index + 1, :, :]
                 
-                # 计算0像素的比例
                 zero_ratio = np.mean(selected_slice == 0)
                 
                 if zero_ratio <= 0.5:
@@ -344,7 +333,7 @@ class MRIDataset(Dataset):
 
             selected_slices = image[start_index:end_index+1, :, :]
 
-            images = []  # 存储五张图像
+            images = [] 
             for i in range(selected_slices.shape[0]):
                 slice = selected_slices[i:i+1, :, :]
                 images.append(slice)
@@ -390,10 +379,8 @@ class AtlasDataset(Dataset):
         angle = random.randint(0, 360)
         img = transforms.functional.affine(img, angle, translate=(0, 0), scale=1, shear=0)
 
-        # 随机水平翻转，概率为 0.5
         img = transforms.RandomHorizontalFlip(p=0.5)(img)
 
-        # 随机垂直翻转，概率为 0.5
         img = transforms.RandomVerticalFlip(p=0.5)(img)
 
         return img, label
@@ -459,7 +446,7 @@ class MRIDataset_quality(Dataset):
                 random_slice_index = np.random.randint(start_index, end_index)
                 selected_slice = image[random_slice_index:random_slice_index + 1, :, :]
                 
-                # 计算0像素的比例
+
                 zero_ratio = np.mean(selected_slice == 0)
                 
                 if zero_ratio <= 0.5:
@@ -482,7 +469,7 @@ class MRIDataset_quality(Dataset):
 
             selected_slices = image[start_index:end_index+1, :, :]
 
-            images = []  # 存储五张图像
+            images = [] 
             for i in range(selected_slices.shape[0]):
                 slice = selected_slices[i:i+1, :, :]
                 images.append(slice)
@@ -566,16 +553,13 @@ class MRIDataset_quality_new(Dataset):
             image = np.expand_dims(image, axis=0)
             image = image[0, :, :, :]
 
-            # 计算每个切片的非0区域占比
             non_zero_ratios = [np.mean(slice != 0) for slice in image]
 
-            # 获取非0区域占比最大的七个切片的索引
             top_slices_indices = np.argsort(non_zero_ratios)[-7:]
 
-            # 选择这些切片
             selected_slices = image[top_slices_indices, :, :]
 
-            images = []  # 存储七张图像
+            images = [] 
             for i in range(selected_slices.shape[0]):
                 slice = selected_slices[i:i+1, :, :]
                 images.append(slice)
@@ -655,16 +639,14 @@ class MRIDataset_quality_new2(Dataset):
             image = np.expand_dims(image, axis=0)
             image = image[0, :, :, :]
 
-            # 计算每个切片的非0区域占比
+
             non_zero_ratios = [np.mean(slice != 0) for slice in image]
 
-            # 获取非0区域占比最大的七个切片的索引
             top_slices_indices = np.argsort(non_zero_ratios)[-7:]
 
-            # 选择这些切片
             selected_slices = image[top_slices_indices, :, :]
 
-            images = []  # 存储七张图像
+            images = []  
             for i in range(selected_slices.shape[0]):
                 slice = selected_slices[i:i+1, :, :]
                 images.append(slice)
@@ -746,16 +728,16 @@ class MRIDataset_quality_new2_slice5(Dataset):
             image = np.expand_dims(image, axis=0)
             image = image[0, :, :, :]
 
-            # 计算每个切片的非0区域占比
+        
             non_zero_ratios = [np.mean(slice != 0) for slice in image]
 
-            # 获取非0区域占比最大的七个切片的索引
+        
             top_slices_indices = np.argsort(non_zero_ratios)[-5:]
 
-            # 选择这些切片
+           
             selected_slices = image[top_slices_indices, :, :]
 
-            images = []  # 存储七张图像
+            images = [] 
             for i in range(selected_slices.shape[0]):
                 slice = selected_slices[i:i+1, :, :]
                 images.append(slice)
